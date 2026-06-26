@@ -18,7 +18,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: payments
-          image: ghcr.io/tulup-404/quickticket-payments:1aa8ac430b18f87e5ba1ad88ce55c28cf3048f74
+          image: ghcr.io/tulup-404/quickticket-payments:f918e384da37165bca13dc8a6bbf7b0ebec654b9
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
