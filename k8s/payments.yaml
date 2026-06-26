@@ -18,7 +18,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: payments
-          image: ghcr.io/tulup-404/quickticket-payments:latest
+          image: ghcr.io/tulup-404/quickticket-payments:1aa8ac430b18f87e5ba1ad88ce55c28cf3048f74
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
@@ -30,7 +30,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8082
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 3
@@ -38,7 +38,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8082
             periodSeconds: 5
             failureThreshold: 2
           resources:
