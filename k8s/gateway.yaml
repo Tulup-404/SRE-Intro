@@ -1,12 +1,24 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1     # ← Changed
+kind: Rollout                         # ← Changed
 metadata:
   name: gateway
-  labels:
-    app: gateway
-    version: "v2"
 spec:
-  replicas: 1
+  replicas: 5                         # ← Need 5 for meaningful canary splits
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: { duration: 20s }
+        - analysis:
+            templates:
+              - templateName: gateway-error-rate
+            args:
+              - name: canary-hash
+                valueFrom:
+                  podTemplateHashValue: Latest
+        - setWeight: 50
+        - pause: { duration: 20s }
+        - setWeight: 100
   selector:
     matchLabels:
       app: gateway
@@ -20,11 +32,13 @@ spec:
         - name: ghcr-secret
       containers:
         - name: gateway
-          image: ghcr.io/tulup-404/quickticket-gateway:8d2b310ff8b0327984d1a4a0635d691b0b4d138a
+          image: ghcr.io/tulup-404/quickticket-gateway:ec1eff1f8f289b277f31d8c3fef3bf5aad83da6d
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
+            - name: APP_VERSION
+              value: "v7"
             - name: EVENTS_URL
               value: "http://events:8081"
             - name: PAYMENTS_URL
