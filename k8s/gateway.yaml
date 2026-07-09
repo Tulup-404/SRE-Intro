@@ -32,7 +32,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: gateway
-          image: ghcr.io/tulup-404/quickticket-gateway:ec1eff1f8f289b277f31d8c3fef3bf5aad83da6d
+          image: ghcr.io/tulup-404/quickticket-gateway:3e561f5ab6d5c08c90997a1ac554aaed4149ebcb
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
