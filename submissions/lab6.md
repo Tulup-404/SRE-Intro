@@ -69,9 +69,11 @@ sum(rate(gateway_requests_total{status=~"5.."}[5m])) / sum(rate(gateway_requests
 3. Your runbook (full text)
 ```commandline
 # Runbook: QuickTicket High Error Rate
+
 ## Alert
 - **Fires when:** Gateway 5xx error rate > 5% for 2 minutes
 - **Dashboard:** QuickTicket — Golden Signals
+
 ## Diagnosis
 1. Check which service is failing:
    - `curl -s http://localhost:3080/health | python3 -m json.tool`
@@ -82,6 +84,7 @@ sum(rate(gateway_requests_total{status=~"5.."}[5m])) / sum(rate(gateway_requests
 4. Check logs for errors:
    - `docker compose logs gateway --tail=20 --since=5m`
    - `docker compose logs payments --tail=20 --since=5m`
+
 ## Common Causes
 | Cause | How to identify | Fix |
 |-------|----------------|-----|
@@ -89,6 +92,7 @@ sum(rate(gateway_requests_total{status=~"5.."}[5m])) / sum(rate(gateway_requests
 | Payments high failure rate | health OK but errors in logs | Check PAYMENT_FAILURE_RATE env var |
 | Events service down | health shows events: down | Restart: `docker compose start events` |
 | Database connection exhausted | events logs show pool errors | Restart events, check DB_MAX_CONNS |
+
 ## Escalation
 - If not resolved in 10 minutes, escalate to: [instructor/TA]
 ```
