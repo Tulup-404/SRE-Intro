@@ -1,36 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payments
+  name: notifications
   labels:
-    app: payments
+    app: notifications
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: payments
+      app: notifications
   template:
     metadata:
       labels:
-        app: payments
+        app: notifications
     spec:
-      imagePullSecrets:
-        - name: ghcr-secret
       containers:
-        - name: payments
-          image: ghcr.io/tulup-404/quickticket-payments:ec1eff1f8f289b277f31d8c3fef3bf5aad83da6d
-          imagePullPolicy: Always
+        - name: notifications
+          image: quickticket-notifications:v1
+          imagePullPolicy: Never
           ports:
-            - containerPort: 8082
+            - containerPort: 8083
           env:
-            - name: PAYMENT_FAILURE_RATE
+            - name: NOTIFY_FAILURE_RATE
               value: "0.0"
-            - name: PAYMENT_LATENCY_MS
+            - name: NOTIFY_LATENCY_MS
               value: "0"
           livenessProbe:
             httpGet:
               path: /health
-              port: 8082
+              port: 8083
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 3
@@ -38,7 +36,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: 8082
+              port: 8083
             periodSeconds: 5
             failureThreshold: 2
           resources:
@@ -52,10 +50,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: payments
+  name: notifications
 spec:
   selector:
-    app: payments
+    app: notifications
   ports:
-    - port: 8082
-      targetPort: 8082
+    - port: 8083
+      targetPort: 8083
